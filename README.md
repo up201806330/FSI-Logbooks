@@ -1,9 +1,8 @@
-
 Breve descrição do grupo
 
-* Turno: [LM]XX
-* Grupo: YY
+* Turno: M08
+* Grupo: 04
 * Alunos:
-    - Aluno1 upZZZZZ 
-    - Aluno2 upZZZZZ
-    - Aluno3 upZZZZZ
+    - João Sousa up201806613 
+    - Rafael Ribeiro up201806330
+    - Xavier Pisco up201806134
