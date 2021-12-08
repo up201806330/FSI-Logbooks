@@ -78,17 +78,21 @@ It can be counted as `0x5000 - len(ADDR) - 62*precision` where `len(ADDR)` is th
 ### Desafio 1
 
 Starting with the `checkseck` we get this output:
+
 ![](https://i.imgur.com/sSijfZq.png)
 
 This means we can't do ROC because of the canaries.
 
 By checking the code we see that there is a missuse of the function printf in the line 27.
+
 ![](https://i.imgur.com/26RMp0V.png)
+
 The user can write to the variable buffer and that variable will be the first parameter of the printf function, that is, it will be the format.
 
 By exploiting this vulnerability we can make the program print the flag variable.
 
 If we use the gdb program we can check the address of the flag variable.
+
 ![](https://i.imgur.com/XZsbjNw.png)
 
 Now we just need to trick the program into printing the string at that address.
@@ -99,13 +103,13 @@ For that, we can send a string containing the address bytes in reverse `\x60\xc0
 
 After inspecting the `main.c` file we can see that there is a vulnerability in the 14th line, `print(buffer);`. Since we can control the vaiable buffer, we can control what is printed in the printf call and, thus, we can print and change variables.
 
-By reading the rest of the code we can find that the flag is not loaded to memory but there is a way to get a shell on the server and, from that, we can find the flag. For that, we need to set the value of the variable key to 0xbeef.
+By reading the rest of the code we can find that the flag is not loaded to memory but there is a way to get a shell on the server and, from that, we can find the flag. For that, we need to set the value of the variable `key` to `0xbeef`.
 
-With the gdb program we found that the variable key is stored in the 0x34c00408 address. By trial and error with `%x` in our code, we found that, the first address of the printf function is the begging of the buffer variable. This means that the first bytes we write on the buffer will be the first address used, e.g. for a input "\x11\x22\x33\x44%x", the output will print \x11\x22\x33\x4411223344. 
+With the gdb program we found that the variable `key` is stored in the `0x34c00408` address. By trial and error with `%x` in our code, we found that, the **first** address of the *printf* function is the beginning of the `buffer` variable. This means that the first bytes we write on the buffer will be the first address used, e.g. for a input `"\x11\x22\x33\x44%x"`, the output will print `\x11\x22\x33\x4411223344`. 
 
-With this information, we just need a string that starts with \x34\xc0\x04\x08 and has 0xbeef characters before the %n. That can be done with a %x with a different precision. So, if we print an address and set the precision to a high value we can change the value of key to the desired one.
+With this information, we just need a string that starts with `\x34\xc0\x04\x08` and has '0xbeef' number of characters before the `%n`. That can be done with a `%x` with a given precision. So, if we print an address and set the precision to a high value we can change the value of `key` to the desired one.
 
-For that print, we need have to add a dummy address before the key address and we need to calculate the precision for the print of that address. The precision will be 0xbeef minus 4 bytes for each of the address, that equals 0xbee7, and thus, we will input a string like "AAAA\x34\xc0\x04\x08%.48871x%n".
+In this case, since there will be 2 modifiers in the payload, we need to add a dummy address before the key address, so this one is consumed by the `%.x` modifier. We also need to calculate the precision for this modifier, so the total input length is of value `0xbeef`. Thus, it will be `0xbeef` minus 4 bytes for **each** of address at the start of the payload (`0xbeef - 8`), which equals `0xbee7`, and thus, we will input a string like `"AAAA\x34\xc0\x04\x08%.48871x%n"`.
 
 After sending this input we get a shell and we just need to execute `cat flag.txt` and we get flag{9b44a34e679ece2545a38b6ec62d36a7}
 
