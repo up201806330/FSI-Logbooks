@@ -114,6 +114,8 @@ window.onload = function() {
 
 We got the flag `flag{609b640aba15d02ae72968b32da93e19}`
 
+![](https://i.imgur.com/zDpHWp7.png)
+
 ## Desafio 2
 
 First off, by running checksec we can see that the program has no canaries, RELRO and NX disabled, but has PIE. This means that the program can be ran anywhere in memory, or doesn't need to be in an absolute position to work.
