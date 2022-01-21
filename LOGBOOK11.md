@@ -25,17 +25,21 @@ The `Subject Key Identifier` and `Authority Key Identifier` match, and in "Basic
 > What part of the certificate indicates this is a self-signed certificate?
 
 If the `Issuer` and `Subject` fields are equal, the certificate is self-signed.
+
 ![](https://i.imgur.com/GKwYThV.png)
 
 > In the RSA algorithm, we have a public exponent e, a private exponent d, (...) 
+> 
 ![](https://i.imgur.com/bYDWgfL.png)
 
 > a modulus n, (...)
+> 
 ![](https://i.imgur.com/anQxqRx.png)
 
 
 > and two secret
 numbers p and q, such that n = pq. Please identify the values for these elements in your certificate and key files.
+
 ![](https://i.imgur.com/xQX3h1y.png)
 
 
@@ -70,6 +74,7 @@ openssl ca -config openssl.cnf -policy policy_anything \
 >`openssl x509 -in server.crt -text -noout`
 
 In the *X509v3 extensions* section, the alternative names are listed.
+
 ![](https://i.imgur.com/2iqkBex.png)
 
 
